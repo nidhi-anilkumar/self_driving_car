@@ -5,52 +5,39 @@
 
 Overview
 ---
+Laneline markings identify the travel for self driving car
 
-When we drive, we use our eyes to decide where to go.  The lines on the road that show us where the lanes are act as our constant reference for where to steer the vehicle.  Naturally, one of the first things we would like to do in developing a self-driving car is to automatically detect lane lines using an algorithm.
-
-In this project you will detect lane lines in images using Python and OpenCV.  OpenCV means "Open-Source Computer Vision", which is a package that has many useful tools for analyzing images.  
-
-To complete the project, two files will be submitted: a file containing project code and a file containing a brief write up explaining your solution. We have included template files to be used both for the [code](https://github.com/udacity/CarND-LaneLines-P1/blob/master/P1.ipynb) and the [writeup](https://github.com/udacity/CarND-LaneLines-P1/blob/master/writeup_template.md).The code file is called P1.ipynb and the writeup template is writeup_template.md 
-
-To meet specifications in the project, take a look at the requirements in the [project rubric](https://review.udacity.com/#!/rubrics/322/view)
-
-
-Creating a Great Writeup
+##Pipeline
 ---
-For this project, a great writeup should provide a detailed response to the "Reflection" section of the [project rubric](https://review.udacity.com/#!/rubrics/322/view). There are three parts to the reflection:
+Automatic detection of lanelines based on images can be divided in 3 steps
 
-1. Describe the pipeline
+###**Step 1 ** Preprocess images
 
-2. Identify any shortcomings
+Convert image to grayscale and blur images. By blurring the image, the objects around get less focused and blend into the scene. Lanelines become more distinct due to the drastic change of color. Use built-in opencv function for canny edge detection to get the outline of the objects. 
 
-3. Suggest possible improvements
+####**Step 2 ** Determine lanes
 
-We encourage using images in your writeup to demonstrate how your pipeline works.  
+For a car traveling on any straight road (or curvature of large radius), depending on the mount angle of the camera, the lane lines appear at an angle of ~+/-40deg from the bottom of the image. This does not hold true at intersections. By bisecting the image in y dimension and measuring the angle subtended by both lane lines at different y, the length of lane.... With a straight road the angle subtended by both lanes remains the same at all points of y till the end of lane (the point of convergence is not visible) With winding roads, the angle subtended by right/left lane starts changing.
+In the algorithm I have considered length of road visible till 0.6 x length of image
+Based on these concepts, mask the portion of imagee of interest. At this point on an empty road, only lane lines are present in the image. 
+Use built-in opencv hough lines function to determine the end points of straight lines of various lengths. Consider resolution in hough domain of 3pixels distance and 2degrees angle, and line properties as 20pixels with 10 pixel gap.
 
-All that said, please be concise!  We're not looking for you to write a book here: just a brief description.
+###**Step 3 ** Combine and extend lane lines
 
-You're not required to use markdown for your writeup.  If you use another method please just submit a pdf of your writeup. Here is a link to a [writeup template file](https://github.com/udacity/CarND-LaneLines-P1/blob/master/writeup_template.md). 
+Divide the lines obtained based on slope as belonging to right lane vs left lane. Positive slope can be considered left lane and negative as right lane. Histogram plot of the slopes of lines categorized as a certain side shows there may be someoutliers in some images. This can be eliminated by choosing lines within 1.5 x mean slope of the category. Find the mean slope and intercept. Draw an extended laneline from base of image to 0.6 x height of image
 
 
-The Project
----
 
-## If you have already installed the [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) you should be good to go!   If not, you should install the starter kit to get started on this project. ##
+## Shortcomings
 
-**Step 1:** Set up the [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) if you haven't already.
+Lanelines are predicted as straight lines.
+Challenge video fails in the middle due to indistinguishable lane line edge against concrete road surface.
+Apart from the above 2 obvious deficiencies, we notice a jitter in the lane lines. The high frequency jitter can be reduced with a filter. The low frequency change of slope is information on road curvature which can be used to better model lane lines.
 
-**Step 2:** Open the code in a Jupyter Notebook
+## Future Improvements
 
-You will complete the project code in a Jupyter notebook.  If you are unfamiliar with Jupyter Notebooks, check out [Udacity's free course on Anaconda and Jupyter Notebooks](https://classroom.udacity.com/courses/ud1111) to get started.
-
-Jupyter is an Ipython notebook where you can run blocks of code and see results interactively.  All the code for this project is contained in a Jupyter notebook. To start Jupyter in your browser, use terminal to navigate to your project directory and then run the following command at the terminal prompt (be sure you've activated your Python 3 carnd-term1 environment as described in the [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) installation instructions!):
-
-`> jupyter notebook`
-
-A browser window will appear showing the contents of the current directory.  Click on the file called "P1.ipynb".  Another browser window will appear displaying the notebook.  Follow the instructions in the notebook to complete the project.  
-
-**Step 3:** Complete the project and submit both the Ipython notebook and the project writeup
-
-## How to write a README
-A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
+[] Polynomial line of 2nd degree for lane lines
+[] Vary preprocessing parameters to handle different light conditions (day vs night, concrete vs asphalt road surfaces)
+[]Tackle edge cases for radius of curvature
+Use advanced techniques to predict and extend lanes in the presence of cars within the lane
 
