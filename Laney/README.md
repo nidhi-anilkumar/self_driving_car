@@ -6,7 +6,7 @@ Overview
 ---
 Identify laneline markings of ego lane
 
-<img src="test_images/final_image.jpg" width="480" alt="Combined Image" />
+<img src="examples/final_image.jpg" width="480" alt="Combined Image" />
 
 Pipeline
 ---
@@ -18,7 +18,7 @@ Convert image to grayscale and blur images. By blurring the image, the objects a
 
 Use built-in opencv function for canny edge detection to get the outline of the objects. 
 
-<img src="examples/solidWhiteRight.jpg" width="480" alt="Input Image" />
+<img src="test_images/solidWhiteRight.jpg" width="480" alt="Input Image" />
 <img src="examples/pre_proc.jpg" width="480" alt="Preprocessed Image" />
 
 ### Step 2  Determine lanes
