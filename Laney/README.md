@@ -6,36 +6,35 @@ Overview
 ---
 Identify laneline markings of ego lane
 
-<img src="examples/laneLines_thirdPass.jpg" width="480" alt="Combined Image" />
+<img src="test_images/final_image.jpg" width="480" alt="Combined Image" />
 
-## Pipeline
+##Pipeline
 ---
 Automatic detection of lanelines based on images can be divided in 3 steps
 
-###  Step 1  Preprocess images
+###Step 1  Preprocess images
 
 Convert image to grayscale and blur images. By blurring the image, the objects around get less focused and blend into the scene. Lanelines become more distinct due to the drastic change of color. 
 
 Use built-in opencv function for canny edge detection to get the outline of the objects. 
 
-<img src="examples/image.jpg" width="480" alt="Input Image" />
-<img src="examples/preproc.jpg" width="480" alt="Preprocessed Image" />
+<img src="examples/solidWhiteRight.jpg" width="480" alt="Input Image" />
+<img src="examples/pre_proc.jpg" width="480" alt="Preprocessed Image" />
 
-###  Step 2  Determine lanes
+###Step 2  Determine lanes
 
 For a car traveling on any straight road (or curvature of large radius), depending on the mount angle of the camera, the lane lines appear at an angle of ~+/-40deg from the bottom of the image. This does not hold true at intersections. With a straight road the angle subtended by both lanes remains the same with respect to x-axis at all points of y till the end of lane (the point of convergence is not visible) With winding roads, the angle subtended by right/left lane starts changing.
 
 In the algorithm I have considered length of road visible till 0.6 x length of image.
 
-Based on these concepts, mask the portion of imagee of interest. On an empty road, only lane lines are present in the image. 
+Based on these concepts, mask the portion of image of interest. On an empty road, only lane lines are present in the processed image. 
 
 Use built-in opencv hough lines function to determine the end points of straight lines of various lengths. Consider resolution in hough domain of 3pixels distance and 2degrees angle, and line properties as 20pixels with 10 pixel gap.
 
-<img src="examples/laneLines_thirdPass.jpg" width="480" alt="Combined Image" />
-<img src="examples/laneLines_thirdPass.jpg" width="480" alt="Combined Image" />
-<img src="examples/laneLines_thirdPass.jpg" width="480" alt="Combined Image" />
+<img src="examples/roc.jpg" width="480" alt="Combined Image" />
+<img src="examples/hough.jpg" width="480" alt="Combined Image" />
 
-###  Step 3  Combine and extend lane lines
+###Step 3  Combine and extend lane lines
 
 Divide the lines obtained based on +/- slope as belonging to right lane vs left lane. 
 
@@ -43,9 +42,9 @@ Histogram plot of the slopes of lines categorized as a certain side shows there 
 
 Find the mean slope and intercept. Draw an extended laneline from base of image to 0.6 x height of image
 
-<img src="examples/laneLines_thirdPass.jpg" width="480" alt="Combined Image" />
+<img src="examples/final_image.jpg" width="480" alt="Final Image" />
 
-## Short-comings
+##Short-comings
 
 Lanelines are predicted as straight lines.
 
