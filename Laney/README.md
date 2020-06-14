@@ -44,7 +44,7 @@ Find the mean slope and intercept. Draw an extended laneline from base of image 
 
 <img src="examples/final_image.jpg" width="480" alt="Final Image" />
 
-##Short-comings
+## Short-comings
 
 Lanelines are predicted as straight lines.
 
@@ -56,6 +56,7 @@ Apart from the above 2 obvious deficiencies, we notice a jitter in the lane line
 
 ## Future Improvements
 
+- [ ] Stabilize lane jitter to within acceptable levels
 - [ ] Polynomial line of 2nd degree for lane lines
 - [ ] Vary preprocessing parameters to handle different light conditions (day vs night, concrete vs asphalt road surfaces)
 - [ ] Tackle edge cases for radius of curvature
