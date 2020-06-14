@@ -1,6 +1,5 @@
 # **Finding Lane Lines on the Road** 
 
-<img src="examples/laney.jpg" width="480" alt="Cartoon" />
 
 Overview
 ---
